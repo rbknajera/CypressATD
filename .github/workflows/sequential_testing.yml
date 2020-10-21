@@ -1,12 +1,9 @@
-name: Parallel Testing
+name: Sequential Testing
 on: 
     workflow_dispatch:
-    pull_request:
-        branches:
-            - main
 jobs:
     parallel-tests:
-        name: Parallel Testing Demo
+        name: Sequential Testing Demo
         runs-on: ubuntu-latest
         strategy:
             matrix:
@@ -17,10 +14,9 @@ jobs:
             - name: Run the tests
               uses: cypress-io/github-action@v2
               with:
-                browser: chrome
+                browser: firefox
                 record: true
-                parallel: true
                 group: 'ATD_DEMO'
-                tag: "Parallel"
+                tag: "Sequential"
               env: 
                 CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}      
