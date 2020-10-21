@@ -5,9 +5,6 @@ jobs:
     parallel-tests:
         name: Sequential Testing Demo
         runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                machines: [1, 2, 3]
         steps:
             - name: Checkout
               uses: actions/checkout@v2
