@@ -1,0 +1,6 @@
+{
+    "baseUrl": "https://dev.react-redux.realworld.io",
+    "env": { 
+        "apiUrl" : "https://conduit.devready.io"
+    }
+}

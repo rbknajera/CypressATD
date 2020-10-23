@@ -5,14 +5,23 @@
   "main": "index.js",
   "scripts": {
     "test": "cypress open",
+    "test:headless": "cypress run; npm run post:tests",
     "test:staging": "cypress run --env configFile=staging",
-    "test:dev": "cypress run --env configFile=dev"
+    "test:dev": "cypress run --env configFile=dev",
+    "report:merge": "mochawesome-merge cypress/results/json/*.json > index.json",
+    "report:generate": "marge index.json --reportDir public --assetsDir public/assets --reportPageTitle index.html --no-showPending",
+    "post:tests": "npm run report:merge; npm run report:generate"
 
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "cypress": "^5.1.0"
+    "cypress": "^5.1.0",
+    "cypress-multi-reporters": "^1.4.0",
+    "mocha": "^8.2.0",
+    "mochawesome": "^6.1.1",
+    "mochawesome-merge": "^4.2.0",
+    "mochawesome-report-generator": "^5.1.0"
   }
 }
