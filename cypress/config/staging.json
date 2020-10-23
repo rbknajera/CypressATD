@@ -1,6 +1,0 @@
-{
-    "baseUrl": "https://stg.react-redux.realworld.io",
-    "env": { 
-        "apiUrl" : "https://conduit.stgready.io"
-    }
-}

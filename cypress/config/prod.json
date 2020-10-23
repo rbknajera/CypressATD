@@ -1,6 +1,0 @@
-{
-    "baseUrl": "https://react-redux.realworld.io",
-    "env": { 
-        "apiUrl" : "https://conduit.productionready.io"
-    }
-}
