@@ -1,0 +1,73 @@
+name: Run tests and generate report
+on: 
+    workflow_dispatch:
+    
+jobs:
+    parallel-tests:
+        name: Parallel Testing Demo
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                machines: [1, 2, 3]
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+            - name: Run the tests
+              uses: cypress-io/github-action@v2
+              with:
+                browser: chrome
+                record: true
+                parallel: true
+                group: 'ATD_DEMO'
+                tag: "Parallel"
+              env: 
+                CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+            # Save the tests reports as artifacts to use them to generate the unique HTML report    
+            - name: Save tests reports
+              if: always()
+              continue-on-error: true
+              uses: actions/upload-artifact@master
+              with: 
+                name: test-reports-${{ matrix.machines }}
+                path: cypress/results/json
+                
+    generate-report:
+        name: Generate the report
+        needs: parallel-tests
+        if: always()
+        runs-on: ubuntu-latest
+        steps:
+            # This step checks out a copy of the repository.
+            - name: Checkout
+              uses: actions/checkout@v2
+            # This step install the dependencies needed  
+            - name: Install dependencies
+              run: npm install mocha cypress-multi-reporters mochawesome mochawesome-merge mochawesome-report-generator
+            # This step downloads the report files saved from the tests  
+            - name: Download all artifacts
+              uses: actions/download-artifact@v2
+              with:
+                path: reports
+            # This steps moves all the reports to a single directory    
+            - name: Move all reports to one directory
+              run: |
+                mkdir -p cypress/results/json
+                i=0
+                for file in $(find reports -type f -name mochawesome\*.json); do
+                  filename=$(basename "$file" .json)-"$i".json
+                  mv "$file" cypress/results/json/"$filename"
+                  ls cypress/results/json
+                  i=$((i + 1))
+                done
+            # This step merges all the test results files into one file 
+            # and generates an HTML report using the file with the results   
+            - name: Merge test results into one file
+              run: npm run post:tests
+            # This step deploys the HTML results report to a GitHub page    
+            - name: Deploy report page
+              uses: peaceiris/actions-gh-pages@v3
+              with: 
+                github_token: ${{ secrets.GITHUB_TOKEN}}
+                publish_dir: ./public
+                user_name: 'github-actions[bot]'
+                user_email: 'github-actions[bot]@users.noreply.github.com'
