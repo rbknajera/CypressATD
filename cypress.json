@@ -1,3 +1,10 @@
 {
-  "projectId": "m7wyoa"
+  "projectId": "m7wyoa",
+  "reporter": "cypress-multi-reporters",
+  "reporterOptions": {
+    "configFile": "reporter-config.json"
+  },
+  "retries": {
+    "runMode": 2
+  }
 }
